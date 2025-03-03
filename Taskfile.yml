@@ -19,13 +19,13 @@ env:
 
 tasks:
   setup:
-    desc: Set up the environment
+    desc: set up
     silent: true
     cmds:
       - mkdir -p {{.bin}}
 
   build:
-    desc: Common build
+    desc: common build
     deps: [setup]
     silent: true
     cmds:
@@ -40,12 +40,26 @@ tasks:
       - strip {{.app_bin}}
       - objcopy --strip-unneeded {{.app_bin}}
 
-  docker:
-    desc: Build docker images
+  docker.build:
+    desc: build bin via docker
     deps: [setup]
-    silent: false
+    silent: true
     cmds:
       - docker compose -f docker-compose.build.yaml up --build --force-recreate
+
+  docker.gox:
+    desc: build prod docker image
+    deps: [docker.build]
+    silent: true
+    cmds:
       - docker build -f Dockerfile -t gox:latest .
       - |
         docker save gox:latest | gzip > gox.tar.gz
+      - docker tag gox:latest ghcr.io/devil666face/gox:latest
+
+  docker.push:
+    desc: push docker in registry
+    deps: [docker.gox]
+    silent: true
+    cmds:
+      - docker push ghcr.io/devil666face/gox:latest

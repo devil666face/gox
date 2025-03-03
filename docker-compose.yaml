@@ -1,9 +1,7 @@
-version: "3"
-
 services:
   gox:
     container_name: gox
-    image: gox:latest
+    image: ghcr.io/devil666face/gox:latest
     restart: unless-stopped
     volumes:
       - ./config:/gox/config

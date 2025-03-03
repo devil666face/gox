@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  gox:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    image: gox:go
+    volumes:
+      - ./bin:/build/bin
+    container_name: gox-go

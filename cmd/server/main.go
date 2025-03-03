@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
 	"gox/internal/server/config"
@@ -21,7 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatalln("fatal config error:", err)
 	}
-	fmt.Println(_config)
 
 	_socks := socks.New(
 		_config.Proto,

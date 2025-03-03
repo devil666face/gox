@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  gox:
+    container_name: gox
+    image: gox:latest
+    restart: unless-stopped
+    volumes:
+      - ./config:/gox/config
+    ports:
+      - 1080:1080/tcp

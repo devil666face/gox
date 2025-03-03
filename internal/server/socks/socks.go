@@ -1,9 +1,10 @@
 package socks
 
 import (
-	"gox/internal/server/socks/ruler"
 	"log"
 	"os"
+
+	"gox/internal/server/socks/ruler"
 
 	"github.com/things-go/go-socks5"
 )

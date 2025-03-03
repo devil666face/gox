@@ -9,6 +9,30 @@ import (
 	"github.com/things-go/go-socks5"
 )
 
+// type SystemResolver struct{}
+
+// func (r *SystemResolver) Resolve(ctx context.Context, name string) (context.Context, net.IP, error) {
+// 	ips, err := net.DefaultResolver.LookupIP(ctx, "ip", name)
+// 	if err != nil {
+// 		return ctx, nil, err
+// 	}
+// 	return ctx, ips[0], nil
+// }
+
+// func (r *SystemResolver) Resolve(ctx context.Context, name string) (context.Context, net.IP, error) {
+// 	resolver := &net.Resolver{
+// 		PreferGo: true,
+// 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+// 			return net.Dial("udp", "127.0.0.11:53")
+// 		},
+// 	}
+// 	ips, err := resolver.LookupIP(ctx, "ip", name)
+// 	if err != nil {
+// 		return ctx, nil, err
+// 	}
+// 	return ctx, ips[0], nil
+// }
+
 type Socks struct {
 	server *socks5.Server
 	proto  string
@@ -37,6 +61,8 @@ func New(
 				),
 			),
 			socks5.WithRule(ruler.New()),
+			// socks5.WithResolver(&SystemResolver{}),
+			socks5.WithResolver(socks5.DNSResolver{}),
 		),
 	}
 }

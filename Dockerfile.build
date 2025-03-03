@@ -3,5 +3,5 @@ RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONT
   sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/bin
 WORKDIR /build
 COPY . .
-CMD ["task","build"]
+CMD ["task","in-docker-build"]
 

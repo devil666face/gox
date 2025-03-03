@@ -3,7 +3,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update --quiet --quiet && \
     apt-get install --quiet --quiet --yes \
     --no-install-recommends --no-install-suggests \
-    openssl ca-certificates \
+    openssl ca-certificates curl \
     && apt-get --quiet --quiet clean \
     && rm --recursive --force /var/lib/apt/lists/* /tmp/* /var/tmp/*
 WORKDIR /gox

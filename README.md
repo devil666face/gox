@@ -13,6 +13,6 @@ update-ca-certificates
 
 ---
 
-https://github.com/lqqyt2423/go-mitmproxy
-https://github.com/elazarl/goproxy
-https://github.com/AdguardTeam/gomitmproxy
+- https://github.com/lqqyt2423/go-mitmproxy
+- https://github.com/elazarl/goproxy
+- https://github.com/AdguardTeam/gomitmproxy

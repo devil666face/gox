@@ -1,0 +1,44 @@
+---
+- name: Copy and install gox
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Copy gox via scp (raw)
+      ansible.builtin.raw: |
+        sshpass -p {{ ansible_password }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P {{ ansible_port | default(22) }} {{ playbook_dir }}/gox {{ ansible_user | default('root') }}@{{ ansible_ssh_host }}:~/gox
+      delegate_to: localhost
+
+    - name: Get home directory for ansible_user
+      ansible.builtin.raw: |
+        eval echo ~$USER
+      register: homedir_result
+
+    - name: Whoami with root
+      ansible.builtin.raw: |
+        whoami
+      become: true
+      become_method: sudo
+      register: whoami_result
+      ignore_errors: true
+
+    - name: Set bin_path fact
+      ansible.builtin.set_fact:
+        bin_path: "{{ homedir_result.stdout_lines[0] }}/gox"
+
+    - name: Execution perms (raw)
+      ansible.builtin.raw: |
+        chmod +x {{ bin_path }}
+      become: "{{ not whoami_result.failed }}"
+      become_method: sudo
+
+    - name: Run ./gox -setup (raw)
+      ansible.builtin.raw: |
+        {{ bin_path }} -setup
+      become: "{{ not whoami_result.failed }}"
+      become_method: sudo
+
+    - name: Remove ./gox (raw)
+      ansible.builtin.raw: |
+        rm -rf {{ bin_path }}
+      become: "{{ not whoami_result.failed }}"
+      become_method: sudo

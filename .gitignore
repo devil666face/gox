@@ -4,3 +4,6 @@
 .aider*
 config.override.yaml
 .env.build
+ansible/keys
+ansible/gox
+ansible/inventory.ini

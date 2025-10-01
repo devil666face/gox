@@ -112,3 +112,22 @@ tasks:
         done
       - cp server.key server.crt cmd/gox/
       - rm -f *.csr *.cnf
+
+  ping:
+    desc: ping all hosts
+    dir: ansible
+    vars:
+      bin: .venv/bin/
+    cmds:
+      - uv sync
+      - "{{.bin}}ansible all -m ping"
+
+  playbook:
+    desc: run playbook
+    dir: ansible
+    vars:
+      bin: .venv/bin/
+    deps:
+      - ping
+    cmds:
+      - "{{.bin}}ansible-playbook playbook.yml -vvv"

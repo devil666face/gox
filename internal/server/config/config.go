@@ -2,9 +2,11 @@ package config
 
 import (
 	"fmt"
-	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
+
+	"gox/pkg/fs"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"gopkg.in/yaml.v3"
@@ -14,7 +16,7 @@ var (
 	_true = true
 )
 
-var _config Config = Config{
+var _default Config = Config{
 	Auth: map[string]string{
 		"username": "password",
 	},
@@ -45,19 +47,18 @@ type Https struct {
 }
 
 func New(filename string) (*Config, error) {
-	var _config = Config{
+	var config = Config{
 		Auth: make(map[string]string),
 	}
-	if err := cleanenv.ReadConfig(filename, &_config); err != nil {
-		if os.IsNotExist(err) {
-			return nil, fmt.Errorf("file not found: %w", err)
-		}
+	if err := cleanenv.ReadConfig(filename, &config); err != nil {
+		log.Println(err, "use default config")
+		return &_default, nil
 	}
-	return &_config, nil
+	return &config, nil
 }
 
 func Default(path string) error {
-	return save(_config, path)
+	return save(_default, path)
 }
 
 func save(config any, path string) error {
@@ -68,22 +69,8 @@ func save(config any, path string) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0o777); err != nil {
 		return fmt.Errorf("failed to save default config: %w", err)
 	}
-	if err := writeFile(path, data); err != nil {
+	if err := fs.WriteFile(path, data); err != nil {
 		return fmt.Errorf("failed to save default config: %w", err)
-	}
-	return nil
-}
-
-func writeFile(
-	path string,
-	data []byte,
-	perm ...int,
-) error {
-	if len(perm) == 0 {
-		perm = append(perm, 0644)
-	}
-	if err := os.WriteFile(path, data, fs.FileMode(perm[0])); err != nil {
-		return fmt.Errorf("failed to save file: %w", err)
 	}
 	return nil
 }

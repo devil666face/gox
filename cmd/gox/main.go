@@ -8,11 +8,14 @@ import (
 
 	"gox/internal/server/config"
 	"gox/internal/server/gox"
+	"gox/pkg/start"
 )
 
 var (
-	path = flag.String("config", "config.yaml", "path to config")
-	save = flag.Bool("save", false, "save default config to path -config")
+	path   = flag.String("config", "config.yaml", "path to config")
+	save   = flag.Bool("save", false, "save default config to path -config")
+	setup  = flag.Bool("setup", false, "set autostart via systemd")
+	remove = flag.Bool("remove", false, "remove autostart via systemd")
 )
 
 //go:embed server.key
@@ -31,6 +34,23 @@ func main() {
 			log.Fatalln(err)
 		}
 		return
+	}
+
+	if _start, err := start.New(); err == nil {
+		if *setup {
+			if err := _start.Setup(); err != nil {
+				log.Fatalln("set autostart error:", err)
+			}
+			return
+		}
+		if *remove {
+			if err := _start.Remove(); err != nil {
+				log.Fatalln("remove autostart error:", err)
+			}
+			return
+		}
+	} else {
+		log.Println("init autostart error:", err)
 	}
 
 	_config, err := config.New(*path)

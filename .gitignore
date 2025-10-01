@@ -2,3 +2,4 @@
 /bin
 /config
 .aider*
+config.override.yaml

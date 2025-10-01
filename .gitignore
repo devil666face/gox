@@ -7,3 +7,4 @@ config.override.yaml
 ansible/keys
 ansible/gox
 ansible/inventory.ini
+ansible/inventory.ini.gpg

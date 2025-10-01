@@ -11,17 +11,14 @@ import (
 
 type Socks struct {
 	server *socks5.Server
-	proto  string
 	listen string
 }
 
 func New(
-	_proto string,
 	_listen string,
 	creds map[string]string,
 ) *Socks {
 	return &Socks{
-		proto:  _proto,
 		listen: _listen,
 		server: socks5.NewServer(
 			socks5.WithAuthMethods(
@@ -44,9 +41,9 @@ func New(
 }
 
 func (s *Socks) Listen() error {
-	log.Printf("listen socks5 on %s/%s", s.listen, s.proto)
+	log.Printf("listen socks on %s", s.listen)
 	return s.server.ListenAndServe(
-		s.proto,
+		"tcp",
 		s.listen,
 	)
 }

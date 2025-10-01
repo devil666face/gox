@@ -16,10 +16,10 @@ var (
 )
 
 //go:embed server.key
-var Key []byte
+var key []byte
 
 //go:embed server.crt
-var Cert []byte
+var cert []byte
 
 func main() {
 	flag.Parse()
@@ -40,7 +40,7 @@ func main() {
 
 	_gox, err := gox.New(
 		_config,
-		Key, Cert,
+		key, cert,
 	)
 	if err != nil {
 		log.Fatalln("create fatal error:", err)

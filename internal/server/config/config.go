@@ -20,7 +20,6 @@ var _config Config = Config{
 	},
 	Socks: Socks{
 		Enable: &_true,
-		Proto:  "tcp",
 		Listen: "0.0.0.0:31080",
 	},
 	Https: Https{
@@ -37,7 +36,6 @@ type Config struct {
 
 type Socks struct {
 	Enable *bool  `yaml:"enable" env-default:"true"`
-	Proto  string `yaml:"proto" env-default:"tcp"`
 	Listen string `yaml:"listen" env-default:"0.0.0.0:31080"`
 }
 

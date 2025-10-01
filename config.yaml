@@ -2,7 +2,6 @@ auth:
   username: password
 socks:
   enable: true
-  proto: tcp
   listen: 0.0.0.0:31080
 https:
   enable: true

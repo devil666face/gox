@@ -23,7 +23,6 @@ func New(
 	}
 	if *_config.Socks.Enable {
 		_gox.socks = socks.New(
-			_config.Socks.Proto,
 			_config.Socks.Listen,
 			_config.Auth,
 		)

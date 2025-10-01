@@ -24,7 +24,7 @@ After=network.target
 [Service]
 Restart=on-failure
 RestartSec=5
-RestartPreventExitStatus=666
+RestartPreventExitStatus=66
 ExecStart=binpath
 
 [Install]

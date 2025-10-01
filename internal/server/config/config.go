@@ -16,7 +16,7 @@ var (
 	_true = true
 )
 
-var _default Config = Config{
+var config Config = Config{
 	Auth: map[string]string{
 		"username": "password",
 	},
@@ -46,19 +46,22 @@ type Https struct {
 	Listen string `yaml:"listen" env-default:"0.0.0.0:38443"`
 }
 
-func New(filename string) (*Config, error) {
-	var config = Config{
-		Auth: make(map[string]string),
-	}
+func New(filename string, username, password string) (*Config, error) {
 	if err := cleanenv.ReadConfig(filename, &config); err != nil {
 		log.Println(err, "use default config")
-		return &_default, nil
+		return &config, nil
 	}
+	if username != "" && password != "" {
+		config.Auth = map[string]string{
+			username: password,
+		}
+	}
+	log.Println("auth", config.Auth)
 	return &config, nil
 }
 
 func Default(path string) error {
-	return save(_default, path)
+	return save(config, path)
 }
 
 func save(config any, path string) error {

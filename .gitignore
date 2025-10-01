@@ -3,3 +3,4 @@
 /config
 .aider*
 config.override.yaml
+.env.build

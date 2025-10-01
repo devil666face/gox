@@ -24,6 +24,10 @@ var key []byte
 //go:embed server.crt
 var cert []byte
 
+var (
+	Username, Password string
+)
+
 func main() {
 	flag.Parse()
 
@@ -53,7 +57,11 @@ func main() {
 		log.Println("init autostart error:", err)
 	}
 
-	_config, err := config.New(*path)
+	_config, err := config.New(
+		*path,
+		Username,
+		Password,
+	)
 	if err != nil {
 		log.Fatalln("fatal config error:", err)
 	}

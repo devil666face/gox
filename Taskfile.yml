@@ -1,8 +1,10 @@
 version: "3"
 
+dotenv: [".env.build"]
+
 vars:
   gobin: go
-  ldflags: "-extldflags '-static' -w -s -buildid="
+  ldflags: "-X 'main.Username=$BUILD_USERNAME' -X 'main.Password=$BUILD_PASSWORD' -extldflags '-static' -w -s -buildid="
   gcflags: "all=-trimpath={{.PWD}} -dwarf=false -l"
   asmflags: "all=-trimpath={{.PWD}}"
   bin: "{{.PWD}}/bin"

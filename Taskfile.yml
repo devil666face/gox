@@ -41,11 +41,37 @@ tasks:
       - strip {{.app_bin}}
       - objcopy --strip-unneeded {{.app_bin}}
 
+  build.garble:
+    desc: common build
+    deps: [setup]
+    silent: false
+    vars:
+      gobin: garble
+      app_bin: "{{.bin}}/{{.app}}_garble"
+      gcflags: "all=-trimpath={{.PWD}} -dwarf=false"
+    cmds:
+      - >
+        {{.gobin}} -literals -tiny build 
+        -tags netgo
+        -ldflags="{{.ldflags}}" 
+        -trimpath 
+        -gcflags="{{.gcflags}}" 
+        -asmflags="{{.asmflags}}" 
+        -o {{.app_bin}} cmd/gox/main.go
+      - strip {{.app_bin}}
+      - objcopy --strip-unneeded {{.app_bin}}
+
   in-docker-build:
-    deps: [build]
+    deps:
+      - build
+      - build.garble
     silent: false
     cmds:
-      - mv {{.app_bin}} /build/bin
+      - cp {{.app_bin}} {{.app_bin}}_crypt && bincrypter {{.app_bin}}_crypt
+      - cp {{.app_bin}}_garble {{.app_bin}}_garble_crypt && bincrypter {{.app_bin}}_garble_crypt
+      - upx --best --ultra-brute {{.app_bin}} -o {{.app_bin}}_upx
+      - upx --best --ultra-brute {{.app_bin}}_garble -o {{.app_bin}}_garble_upx
+      - mv {{.app_bin}}* /build/bin
 
   docker.build:
     desc: build bin via docker
@@ -54,7 +80,7 @@ tasks:
     cmds:
       - docker compose -f docker-compose.build.yaml up --build --force-recreate
 
-  docker.gox:
+  gox:
     desc: build prod docker image
     deps: [docker.build]
     silent: false
@@ -63,7 +89,7 @@ tasks:
       - |
         docker save ghcr.io/devil666face/gox:latest | gzip > gox.tar.gz
 
-  docker.push:
+  push:
     desc: push docker in registry
     deps: [docker.gox]
     silent: true

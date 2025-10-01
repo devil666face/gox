@@ -1,7 +1,30 @@
-FROM golang:1.20.14
+FROM ubuntu:16.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=UTC
+
+RUN apt-get update --quiet --quiet && \
+    apt-get install --quiet --quiet --yes \
+    --no-install-recommends --no-install-suggests \
+    curl openssl zip wget tar ca-certificates build-essential git upx \
+    && apt-get --quiet --quiet clean \
+    && rm --recursive --force /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone && \
   sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/bin
+
+RUN wget https://go.dev/dl/go1.25.1.linux-amd64.tar.gz && \
+    tar -xf go1.25.1.linux-amd64.tar.gz
+
+ENV PATH="${PATH}:/go/bin:/root/go/bin"
+
+RUN curl -SsfL https://github.com/hackerschoice/bincrypter/releases/latest/download/bincrypter -o /usr/bin/bincrypter && \
+  chmod +x /usr/bin/bincrypter && \
+  go install mvdan.cc/garble@latest
+
 WORKDIR /build
+
 COPY . .
+
 CMD ["task","in-docker-build"]
 

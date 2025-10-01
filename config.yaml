@@ -3,7 +3,7 @@ auth:
 socks:
   enable: true
   proto: tcp
-  listen: 0.0.0.0:1080
+  listen: 0.0.0.0:31080
 https:
   enable: true
-  listen: 0.0.0.0:8443
+  listen: 0.0.0.0:38443

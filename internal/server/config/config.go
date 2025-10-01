@@ -21,11 +21,11 @@ var _config Config = Config{
 	Socks: Socks{
 		Enable: &_true,
 		Proto:  "tcp",
-		Listen: "0.0.0.0:1080",
+		Listen: "0.0.0.0:31080",
 	},
 	Https: Https{
 		Enable: &_true,
-		Listen: "0.0.0.0:8443",
+		Listen: "0.0.0.0:38443",
 	},
 }
 
@@ -38,12 +38,12 @@ type Config struct {
 type Socks struct {
 	Enable *bool  `yaml:"enable" env-default:"true"`
 	Proto  string `yaml:"proto" env-default:"tcp"`
-	Listen string `yaml:"listen" env-default:"0.0.0.0:1080"`
+	Listen string `yaml:"listen" env-default:"0.0.0.0:31080"`
 }
 
 type Https struct {
 	Enable *bool  `yaml:"enable" env-default:"true"`
-	Listen string `yaml:"listen" env-default:"0.0.0.0:8443"`
+	Listen string `yaml:"listen" env-default:"0.0.0.0:38443"`
 }
 
 func New(filename string) (*Config, error) {
@@ -51,8 +51,8 @@ func New(filename string) (*Config, error) {
 		Auth: make(map[string]string),
 	}
 	if err := cleanenv.ReadConfig(filename, &_config); err != nil {
-		if !os.IsNotExist(err) {
-			return &_config, fmt.Errorf("failed to parse config: %w", err)
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("file not found: %w", err)
 		}
 	}
 	return &_config, nil

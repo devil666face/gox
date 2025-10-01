@@ -11,6 +11,7 @@ vars:
   remote_user: root
   remote_host: 192.168.200.53
   remote_dir: "~/"
+  subject_alt_name: "IP:127.0.0.1, IP:192.168.0.1, DNS:proxy.local.lan"
 
 env:
   CGO_ENABLED: 0
@@ -36,7 +37,7 @@ tasks:
         -trimpath 
         -gcflags="{{.gcflags}}" 
         -asmflags="{{.asmflags}}" 
-        -o {{.app_bin}} cmd/server/main.go
+        -o {{.app_bin}} cmd/gox/main.go
       - strip {{.app_bin}}
       - objcopy --strip-unneeded {{.app_bin}}
 
@@ -68,3 +69,18 @@ tasks:
     silent: true
     cmds:
       - docker push ghcr.io/devil666face/gox:latest
+
+  web.certs:
+    desc: "generate certs for web"
+    cmds:
+      - openssl genrsa -out ca.key 2048
+      - openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -out ca.crt -subj "/CN=MyRootCA"
+      - echo "subjectAltName = {{.subject_alt_name}}" > extfile.cnf
+      - |
+        for name in server; do \
+          openssl genrsa -out $name.key 2048; \
+          openssl req -new -key $name.key -out $name.csr -subj "/CN=$name"; \
+          openssl x509 -req -in $name.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out $name.crt -days 3650 -sha256 -extfile extfile.cnf; \
+        done
+      - cp server.key server.crt cmd/gox/
+      - rm -f *.csr *.cnf

@@ -11,10 +11,6 @@ type Request struct {
 }
 
 func New(req *socks5.Request) *Request {
-	// log.Println(req.DstAddr)
-	// log.Println(req.LocalAddr)
-	// log.Println(req.RemoteAddr)
-	// log.Println(req.DestAddr)
 	return &Request{
 		Username: req.AuthContext.Payload[username],
 	}

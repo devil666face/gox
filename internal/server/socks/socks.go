@@ -34,7 +34,6 @@ func New(
 				),
 			),
 			socks5.WithRule(ruler.New()),
-			// socks5.WithResolver(&SystemResolver{}),
 			socks5.WithResolver(socks5.DNSResolver{}),
 		),
 	}

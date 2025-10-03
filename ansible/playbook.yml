@@ -43,9 +43,11 @@
         {{ bin_path }} -setup
       become: "{{ not whoami_result.failed }}"
       become_method: sudo
+      ignore_errors: true
 
     - name: Remove ./gox (raw)
       ansible.builtin.raw: |
         rm -rf {{ bin_path }}
       become: "{{ not whoami_result.failed }}"
       become_method: sudo
+      ignore_errors: true

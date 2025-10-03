@@ -5,7 +5,7 @@
   tasks:
     - name: Copy gox via scp (raw)
       ansible.builtin.raw: |
-        sshpass -p {{ ansible_password }} scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P {{ ansible_port | default(22) }} {{ playbook_dir }}/gox {{ ansible_user | default('root') }}@{{ ansible_ssh_host }}:~/gox
+        sshpass -p '{{ ansible_password }}' scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P {{ ansible_port | default(22) }} {{ playbook_dir }}/gox {{ ansible_user | default('root') }}@{{ ansible_ssh_host }}:~/gox
       delegate_to: localhost
 
     - name: Get home directory for ansible_user

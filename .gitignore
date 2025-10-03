@@ -9,3 +9,6 @@ ansible/gox
 ansible/inventory.ini
 ansible/inventory.ini.gpg
 check.override.sh
+ca.crt
+ca.key
+ansible/ansible.log

@@ -7,3 +7,14 @@ services:
       - ./config:/gox/config
     ports:
       - 1080:1080/tcp
+    networks:
+      - gox
+
+networks:
+  gox:
+    driver: bridge
+    name: gox
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24
+          gateway: 172.24.0.1

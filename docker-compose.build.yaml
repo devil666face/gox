@@ -7,3 +7,4 @@ services:
     volumes:
       - ./bin:/build/bin
     container_name: gox-go
+    network_mode: host

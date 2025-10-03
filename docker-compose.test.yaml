@@ -7,8 +7,22 @@ services:
       - ./config:/gox/config
     ports:
       - 1080:1080/tcp
+    networks:
+      - gox
+
   web:
     container_name: web
     image: busybox
     command: httpd -f -p 80
     restart: unless-stopped
+    networks:
+      - gox
+
+networks:
+  gox:
+    driver: bridge
+    name: gox
+    ipam:
+      config:
+        - subnet: 172.24.0.0/24
+          gateway: 172.24.0.1

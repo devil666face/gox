@@ -49,7 +49,6 @@ type Https struct {
 func New(filename string, username, password string) (*Config, error) {
 	if err := cleanenv.ReadConfig(filename, &config); err != nil {
 		log.Println(err, "use default config")
-		return &config, nil
 	}
 	if username != "" && password != "" {
 		config.Auth = map[string]string{

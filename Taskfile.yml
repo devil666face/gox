@@ -127,7 +127,5 @@ tasks:
     dir: ansible
     vars:
       bin: .venv/bin/
-    deps:
-      - ping
     cmds:
-      - "{{.bin}}ansible-playbook playbook.yml -vvv"
+      - "{{.bin}}ansible-playbook playbook.yml"

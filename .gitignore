@@ -8,3 +8,4 @@ ansible/keys
 ansible/gox
 ansible/inventory.ini
 ansible/inventory.ini.gpg
+check.override.sh

@@ -44,6 +44,7 @@
       become: "{{ not whoami_result.failed }}"
       become_method: sudo
       ignore_errors: true
+      register: setup_result
 
     - name: Remove ./gox (raw)
       ansible.builtin.raw: |
@@ -51,3 +52,9 @@
       become: "{{ not whoami_result.failed }}"
       become_method: sudo
       ignore_errors: true
+
+    - name: Print succes
+      debug:
+        msg: |
+          [SUCCESS] {{ ansible_ssh_host }}
+      when: setup_result is defined and setup_result.rc == 0

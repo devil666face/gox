@@ -128,4 +128,4 @@ tasks:
     vars:
       bin: .venv/bin/
     cmds:
-      - "{{.bin}}ansible-playbook playbook.yml | tee ansible.log"
+      - "{{.bin}}ansible-playbook playbook.yml -vvv | tee ansible.log"

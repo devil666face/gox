@@ -93,7 +93,7 @@ tasks:
 
   push:
     desc: push docker in registry
-    deps: [docker.gox]
+    deps: [gox]
     silent: true
     cmds:
       - docker push ghcr.io/devil666face/gox:latest

@@ -42,17 +42,25 @@ func New(
 }
 
 func (g *Gox) Listen() error {
-	errs := make(chan error, 2)
+	var (
+		i    int
+		errs = make(chan error, 2)
+	)
 
 	if g.https != nil {
+		i++
 		go func() {
 			errs <- g.https.Listen()
 		}()
 	}
 	if g.socks != nil {
+		i++
 		go func() {
 			errs <- g.socks.Listen()
 		}()
+	}
+	if i == 0 {
+		return fmt.Errorf("no servers enabled")
 	}
 	return <-errs
 }

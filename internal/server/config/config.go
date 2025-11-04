@@ -16,9 +16,9 @@ var (
 	_true = true
 )
 
-var config Config = Config{
+var _default Config = Config{
 	Auth: map[string]string{
-		"username": "password",
+		"": "",
 	},
 	Socks: Socks{
 		Enable: &_true,
@@ -37,17 +37,19 @@ type Config struct {
 }
 
 type Socks struct {
-	Enable *bool  `yaml:"enable" env-default:"true"`
 	Listen string `yaml:"listen" env-default:"0.0.0.0:31080"`
+	Enable *bool  `yaml:"enable" env-default:"true"`
 }
 
 type Https struct {
-	Enable *bool  `yaml:"enable" env-default:"true"`
 	Listen string `yaml:"listen" env-default:"0.0.0.0:38443"`
+	Enable *bool  `yaml:"enable" env-default:"true"`
 }
 
 func New(filename string, username, password string) (*Config, error) {
+	var config Config
 	if err := cleanenv.ReadConfig(filename, &config); err != nil {
+		config = _default
 		log.Println(err, "use default config")
 	}
 	if username != "" && password != "" {
@@ -60,7 +62,7 @@ func New(filename string, username, password string) (*Config, error) {
 }
 
 func Default(path string) error {
-	return save(config, path)
+	return save(_default, path)
 }
 
 func save(config any, path string) error {

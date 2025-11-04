@@ -69,6 +69,7 @@ tasks:
       - build.garble
     silent: false
     cmds:
+      - rm -f /build/bin/*
       - cp {{.app_bin}} {{.app_bin}}_crypt && bincrypter {{.app_bin}}_crypt
       - cp {{.app_bin}}_garble {{.app_bin}}_garble_crypt && bincrypter {{.app_bin}}_garble_crypt
       - upx --best --ultra-brute {{.app_bin}} -o {{.app_bin}}_upx

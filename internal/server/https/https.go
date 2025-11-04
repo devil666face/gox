@@ -37,6 +37,10 @@ func New(
 
 func authMiddleware(auth map[string]string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(auth) == 0 {
+			next.ServeHTTP(w, r)
+			return
+		}
 		header := r.Header.Get("Proxy-Authorization")
 		if header == "" {
 			w.Header().Set("Proxy-Authenticate", `Basic realm="Restricted"`)

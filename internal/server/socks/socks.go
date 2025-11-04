@@ -18,9 +18,17 @@ func New(
 	_listen string,
 	creds map[string]string,
 ) *Socks {
-	return &Socks{
-		listen: _listen,
-		server: socks5.NewServer(
+	opt := []socks5.Option{
+		socks5.WithLogger(
+			socks5.NewLogger(
+				log.New(os.Stdout, "", log.LstdFlags),
+			),
+		),
+		socks5.WithRule(ruler.New()),
+		socks5.WithResolver(socks5.DNSResolver{}),
+	}
+	if len(creds) != 0 {
+		opt = append(opt,
 			socks5.WithAuthMethods(
 				[]socks5.Authenticator{
 					socks5.UserPassAuthenticator{
@@ -28,13 +36,12 @@ func New(
 					},
 				},
 			),
-			socks5.WithLogger(
-				socks5.NewLogger(
-					log.New(os.Stdout, "", log.LstdFlags),
-				),
-			),
-			socks5.WithRule(ruler.New()),
-			socks5.WithResolver(socks5.DNSResolver{}),
+		)
+	}
+	return &Socks{
+		listen: _listen,
+		server: socks5.NewServer(
+			opt...,
 		),
 	}
 }
